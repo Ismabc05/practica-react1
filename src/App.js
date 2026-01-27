@@ -4,6 +4,7 @@ import { TodoInput } from './componentes/TodoInput.js';
 import { TodoList } from './componentes/TodoList.js';
 import { TodoItem } from './componentes/TodoItem.js';
 import { TodoButton } from './componentes/TodoButton.js';
+import { useLocalStorage } from "./hooks/useLocalStorage";
 
 
 //const defaultTodos = [
@@ -13,35 +14,11 @@ import { TodoButton } from './componentes/TodoButton.js';
   //{ text: "LALALALALALALA", completed: false},
 //];
 
-//localStorage.setItem("TODOS_V1", JSON.stringfy(defaultTodos));
+//localStorage.setItem("TODOS_V1", JSON.stringify(defaultTodos));
 // localStorage.removeItem("TODOS_V1");
 
-
-function useLocalStorage(itemName, initialValue) {
-  const localStorageItem = localStorage.getItem(itemName); // buscar en el localStorage si ya existe algo guardado con el nombre
-
-  let parsedItem;
-
-  if (!localStorageItem) { // si es null o esta vacio entoces
-    localStorage.setItem(itemName, JSON.stringify(initialValue)); // le enviamos a localStorage un array vacio 
-    parsedItem = initialValue; // y el parsedTodos que es lo que se muestra tambien vacio
-  }else { // si tiene algo
-    parsedItem = JSON.parse(localStorageItem); // parsedTodos muestra lo que haya en localStorageTodos
-  }
-
-  const [item, setItem] = React.useState(parsedItem);
-
-  const saveItem = (newItems) => { // ahora cuando completemos o eliminemos va a llamar esta funcion que e encargará de actualizar el estado inicial y el localStorage y así cuando recarguemos estén esos
-    localStorage.setItem(itemName, JSON.stringify(newItems)); // actualizamos localStorage
-    setItem(newItems); // actualiizamos el estado
-  }
-
-  return [item, saveItem];
-
-};
-
 function App() {
-  const [todos, saveTodos] = useLocalStorage("TODOS_V1", [])
+  const {item: todos, saveItem: saveTodos, loading, error} = useLocalStorage("TODOS_V1", [])
   const [valorInput, setValorInput] = React.useState("");
 
 
@@ -78,6 +55,10 @@ function App() {
       {todos.every(todo => todo.completed) && <p>🎉 ¡Has completado todas las tareas!</p>} 
 
       <TodoList>
+        {loading && <p>Cargando...</p>}
+        {error && <p>Hubo un error</p>}
+        {(!loading && buscarTodos.length === 0) && <p>No tienes ninguna tarea!</p>}
+
         {buscarTodos.map(todo => ( 
           <TodoItem key={todo.text} text={todo.text} completed={todo.completed}  
           onComplete={() => completeTodo(todo.text)}
