@@ -1,0 +1,49 @@
+import React from "react";
+import { TodoTitle } from '../componentes/TodoTitle';
+import { TodoInput } from '../componentes/TodoInput';
+import { TodoList } from '../componentes/TodoList';
+import { TodoItem } from '../componentes/TodoItem';
+import { TodoButton } from '../componentes/TodoButton';
+import { TodoLoading } from '../componentes/TodoLoading';
+import { TodoError } from '../componentes/TodoError';
+import { TodoEmpty } from '../componentes/TodoEmpty';
+import { TodoContext} from '../context/context';
+
+function AppUI() {
+  const {
+    loading,
+    error,
+    completeTodo,
+    deleteTodo,
+    buscarTodos,
+    todos
+  } = React.useContext(TodoContext);
+
+  return (
+    <>
+      <TodoTitle />
+      <TodoInput />
+      {todos.length > 0 && todos.every(todo => todo.completed) && <p style={{width: '100%', textAlign: 'center',}}>¡Has completado todas las tareas!</p>} 
+
+      <TodoList>
+        {loading && <TodoLoading />}
+        {error && <TodoError />}
+        {!loading && buscarTodos.length === 0 && <TodoEmpty />}
+
+        {buscarTodos.map(todo => (
+          <TodoItem
+            key={todo.text}
+            text={todo.text}
+            completed={todo.completed}
+            onComplete={() => completeTodo(todo.text)}
+            onDelete={() => deleteTodo(todo.text)}
+          />
+        ))}
+      </TodoList>
+
+      <TodoButton />
+    </>
+  );
+}
+
+export { AppUI };

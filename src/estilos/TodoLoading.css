@@ -1,0 +1,19 @@
+.TodoItem--loading {
+  pointer-events: none;
+}
+
+/* círculo gris (íconos) */
+.skeleton-circle {
+  width: 24px;
+  height: 24px;
+  background: #d3d3d3;
+  border-radius: 50%;
+}
+
+/* línea gris (texto) */
+.skeleton-line {
+  width: 70%;
+  height: 16px;
+  background: #d3d3d3;
+  border-radius: 4px;
+}
