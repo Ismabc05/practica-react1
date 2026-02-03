@@ -13,12 +13,22 @@ function TodoProvider ({children}) {
     const completedTodos = todos.filter(todo => !!todo.completed).length;
     const totalTodos = todos.length;
     const buscarTodos = todos.filter((todo) => {
-        return todo.text.toLowerCase().includes(valorInput.toLocaleLowerCase())
-    })
+        return todo.text
+        ?.toLowerCase().includes(valorInput.toLowerCase());
+        });
+
+    const addTodo = (newText) => {
+        const newTodos = [...todos];
+        newTodos.push({
+            text: newText,
+            completed: false,
+        });
+        saveTodos(newTodos);
+    };  
 
     const completeTodo = (text) => {
-    const newTodos = [...todos];
-    const todoIndex = newTodos.findIndex(
+        const newTodos = [...todos];
+        const todoIndex = newTodos.findIndex(
         (todo) => todo.text === text
         );
         newTodos[todoIndex].completed = true;
@@ -26,8 +36,8 @@ function TodoProvider ({children}) {
     }
 
     const deleteTodo = (text) => {
-    const newTodos = [...todos];
-    const todoIndex = newTodos.findIndex(
+        const newTodos = [...todos];
+        const todoIndex = newTodos.findIndex(
       (todo) => todo.text === text
     );
     newTodos.splice(todoIndex, 1);
@@ -36,7 +46,7 @@ function TodoProvider ({children}) {
 
    return(
     <TodoContext.Provider value={{
-        deleteTodo, completeTodo, totalTodos, buscarTodos, completedTodos, setValorInput, loading, error, valorInput, todos, openModal, setOpenModal
+        deleteTodo, completeTodo, totalTodos, buscarTodos, completedTodos, setValorInput, loading, error, valorInput, todos, openModal, setOpenModal, addTodo
     }}>
         {children}
     </TodoContext.Provider>
